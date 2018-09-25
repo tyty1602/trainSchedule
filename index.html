@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+​
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    ​
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="assets/css/stylesheet.css">
+</head>
+​
+
+<body>
+    <section class="bg-solid-light slideContainer strut-slide-0" style="background-image: url(http://getwallpapers.com/wallpaper/full/7/9/c/279086.jpg); background-repeat: no-repeat;width: 100%;height: 100%;"></section>
+
+    <div class="jumbotron">
+        <h3 class="display-4">Train Schedule</h3>
+        <p class="lead">A train is a form of transport consisting of a series of connected vehicles that generally runs
+            along a rail track to transport cargo or passengers. The word "train" comes from the Old French trahiner,
+            derived from the Latin trahere meaning "to pull" or "to draw".</p>
+        <hr class="my-4">
+        </p>
+    </div>
+    ​
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Train Name</th>
+                <th scope="col">Destination</th>
+                <th scope="col" input type="date">Date</th>
+                <th scope="col">Frequency (mins)</th>
+                <th scope="col">Next Arrival</th>
+                <th scope="col">Minutes Away</th>
+                ​
+            </tr>
+        </thead>
+        <tbody class="tableBody">
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    ​<form style="margin:10px;">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Train Name</label>
+            <input type="text" class="form-control" id="nameInput" aria-describedby="emailHelp" placeholder="Train Name">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Destination</label>
+            <input type="text" class="form-control" id="destinationInput" aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Date</label>
+            <input type="date" class="form-control" id="dateInput" aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Frequency</label>
+            <input type="text" class="form-control" id="frequencyInput" aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Next Arrival</label>
+            <input type="time" class="form-control" id="arrivalInput firstTime" placeholder="number">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Minutes Away</label>
+            <input type="number" class="form-control" id="awayInput" placeholder="number">
+        </div>
+        <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+    </form>
+    <script>
+        // START CODING BELOW!!
+
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyB5pjC2UXQcL-1fwyGtYijDd3MSVEVhMLQ",
+            authDomain: "trainschedule-fd19c.firebaseapp.com",
+            databaseURL: "https://trainschedule-fd19c.firebaseio.com",
+            projectId: "trainschedule-fd19c",
+            storageBucket: "trainschedule-fd19c.appspot.com",
+            messagingSenderId: "224917855233"
+        };
+        firebase.initializeApp(config);
+
+        // Create a variable to reference the database.
+        var database = firebase.database();
+
+        // Initial Values --- SOLUTION CREATEED 
+        var trainName = "";
+        var destination = "";
+        var frequency = "";
+        var date = "";
+        var nextArrival;
+        var minsAway = "";
+        //converts user input to usable info
+        // var firstTime = moment($("#firstTime").val());
+
+        // Capture Button Click
+        $(".submitBtn").on("click", function (event) {
+            event.preventDefault();
+
+            // Grabbed values from text-boxes
+            name = $("#nameInput").val().trim();
+            destination = $("#destinationInput").val().trim();
+            date = $("#dateInput").val().trim();
+            frequency = $("#frequencyInput").val().trim();
+            nextArrival = $("#arrivalInput").val();
+            minsAway = $("#awayInput").val().trim();
+
+            // Code for "Setting values in the database"
+            database.ref().push({
+                name: name,
+                destination: destination,
+                date: date,
+                frequency: frequency,
+                nextArrival: nextArrival,
+                minsAway: minsAway,
+            });
+
+        });
+
+        // Firebase watcher + initial loader HINT: .on("value")
+        database.ref().on("child_added", function (snapshot) {
+
+            // Log everything that's coming out of snapshot
+            console.log(snapshot.val());
+            console.log(snapshot.val().name);
+            console.log(snapshot.val().destination);
+            console.log(snapshot.val().date);
+            console.log(snapshot.val().frequency);
+            console.log(snapshot.val().nextArrival);
+            console.log(snapshot.val().minsAway);
+
+
+            // Change the HTML to reflect
+            var newRow = $("<tr>");
+            newRow.append("<td>" + snapshot.val().name + "<td>");
+            newRow.append("<td>" + snapshot.val().destination + "<td>");
+            newRow.append("<td>" + snapshot.val().date + "<td>");
+            newRow.append("<td>" + snapshot.val().frequency + "<td>");
+            newRow.append("<td>" + snapshot.val().nextArrival + "<td>");
+            newRow.append("<td>" + snapshot.val().minsAway + "<td>");
+
+            $(".tableBody").append(newRow);
+
+            // // Moment JS
+
+            // //makes first train time neater
+            // var trainTime = moment.unix(firstTime).format("hh:mm");
+            // //calculate difference between times
+            // var difference = moment().diff(moment(trainTime), "minutes");
+
+            // //time apart(remainder)
+            // var trainRemain = difference % frequency;
+
+            // //minutes until arrival
+            // var minUntil = frequency - trainRemain;
+
+            // //next arrival time
+            // var nextArrival = moment().add(minUntil, "minutes").format('hh:mm');
+
+            // Handle the errors
+        }, function (errorObject) {
+            console.log("Errors handled: " + errorObject.code);
+        });
+    </script>
+    ​
+</body>
+​
+
+</html>
